@@ -1,8 +1,8 @@
 # Notion Mail - Internal Messaging Integration Tool
 
-**Owner:** Emily Guo
-**Last Modified:** 09/25/2024
-**Contact:** [yue.guo@utexas.edu](mailto:yue.guo@utexas.edu)
+**Owner:** Emily Guo \
+**Last Modified:** 09/25/2024 \
+**Contact:** [yue.guo@utexas.edu](mailto:yue.guo@utexas.edu) \
 
 ## Overview
 
