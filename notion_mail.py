@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 import os
 from notion_client import Client
 from datetime import datetime
+import inquirer
+from inquirer.errors import ValidationError
 
 # Initialize Notion client
 load_dotenv()
@@ -20,6 +22,14 @@ notion = Client(auth=os.getenv("NOTION_TOKEN"))
 
 # Initialize Database to modify
 DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
+
+def validate_non_empty(answers, current):
+    """
+    Ensure that the input is not an empty string.
+    """
+    if not current.strip():
+        raise ValidationError("", reason="This field cannot be empty.")
+    return True
 
 def send_mail(sender, recipients, message):
     """
@@ -244,26 +254,44 @@ def main():
 
     while True:
         print(f"{'=' * 60}")
-        print("\nPlease select an option:")
-        print("- send: Send mail to a user.")
-        print("- read: Check a user's mail.")
-        print("- delete: Delete a message.")
-        print("- exit: Exit the application.\n")
+        options = [
+            inquirer.List(
+                'option',
+                message="Please select an option",
+                choices=['send', 'read', 'delete', 'exit']
+            )
+        ]
+        # print("\nPlease select an option:")
+        # print("- send: Send mail to a user.")
+        # print("- read: Check a user's mail.")
+        # print("- delete: Delete a message.")
+        # print("- exit: Exit the application.\n")
 
-        option = input("Select an option: ").strip().lower()
+        # option = input("Select an option: ").strip().lower()
+        answers = inquirer.prompt(options)
+        option = answers['option']
 
         if option == "send":
-            sender = input("Sender: $ ").strip()
-            recipient = input("Recipient: $ ").strip()
-            message = input("Message: $ ").strip()
-            send_mail(sender, recipient, message)
+            questions=[
+                inquirer.Text('sender', message="Sender", validate=validate_non_empty),
+                inquirer.Text('recipient', message="Recipient", validate=validate_non_empty),
+                inquirer.Text('message', message="Message", validate=validate_non_empty),
+            ]
+            answers = inquirer.prompt(questions)
+            send_mail(answers['sender'], answers['recipient'], answers['message'])
 
         elif option == "read":
-            user = input("User: $ ").strip()
-            read_mail(user)
+            questions=[
+                inquirer.Text('user', message="User", validate=validate_non_empty)
+            ]
+            answers = inquirer.prompt(questions)
+            read_mail(answers['user'])
         elif option == "delete":
-            user = input("User: ")
-            delete_mail(user)
+            questions=[
+                inquirer.Text('user', message="User", validate=validate_non_empty)
+            ]
+            answers = inquirer.prompt(questions)
+            delete_mail(answers['user'])
         elif option == "exit":
             print("Exiting NotionMail. Goodbye!")
             break
