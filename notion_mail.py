@@ -4,7 +4,7 @@ a messagig service. The tool is based off the Notion API and the unofficial
 Notion SDK for python.
 
 Owner: Emily Guo
-Last Modified: 9/25/2024
+Last Modified: 10/09/2024
 Contact: yue.guo@utexas.edu
 
 """
@@ -25,7 +25,7 @@ DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
 
 def validate_non_empty(answers, current):
     """
-    Ensure that the input is not an empty string.
+    Helper method to ensure that the input is not an empty string.
     """
     if not current.strip():
         raise ValidationError("", reason="This field cannot be empty.")
